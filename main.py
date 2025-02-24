@@ -1,3 +1,4 @@
+#main.py
 from quantum_algorithms import shor_algorithm, grover_algorithm, qaoa_algorithm, hhl_algorithm, vqe_algorithm
 
 def process_query(query_vector):
