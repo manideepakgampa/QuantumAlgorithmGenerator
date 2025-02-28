@@ -81,7 +81,7 @@ class ShorQuantumSimulator(QuantumSimulator):
 
 # Example Usage
 if __name__ == "__main__":
-    N = 15  # Example number
+    N = 15 # Example number
     result = shor_algorithm(N)
     if result:
         print(f"Factors of {N} are: {result}")
