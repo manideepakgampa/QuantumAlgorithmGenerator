@@ -32,6 +32,7 @@ class BernsteinVazirani:
 # Example run
 if __name__ == "__main__":
     print("🔄 Script is executing...")  # Add this
+    print("Bernstein-Vazirani Algorithm for n=4 and hidden string '1011'")
     bv = BernsteinVazirani(4, "1011")
     bv.run()
 

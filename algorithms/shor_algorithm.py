@@ -81,9 +81,10 @@ class ShorQuantumSimulator(QuantumSimulator):
 
 # Example Usage
 if __name__ == "__main__":
-    N = 15 # Example number
+    N = 153947035839 # Example number
     result = shor_algorithm(N)
     if result:
+        print("Shor's Algorithm for Integer Factorization")
         print(f"Factors of {N} are: {result}")
     else:
         print("Factorization failed. Try again.")
