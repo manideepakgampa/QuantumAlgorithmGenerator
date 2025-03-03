@@ -61,5 +61,41 @@ class QuantumSimulator(ABC):
                 Z = np.array([[1, 0], [0, -1]])  # Z gate matrix
                 self.apply_single_qubit_gate(Z, qubit)
                 print(f"⚡ Applied Phase Flip on qubit {qubit}")
+    def apply_controlled_phase(self, control, target, theta):
+        """Applies a controlled phase shift between control and target qubit."""
+        num_states = len(self.state_vector)
+        new_state = np.copy(self.state_vector)
 
+        for i in range(num_states):
+            if (i >> control) & 1 and (i >> target) & 1:  # Both control and target are 1
+                new_state[i] *= np.exp(1j * theta)  # Apply phase shift
+
+        self.state_vector = new_state
+        print(f"🔗 Applied Controlled Phase (θ={theta}) from {control} to {target}")
+    def swap(self, qubit1, qubit2):
+        """Swaps two qubits in the quantum state vector."""
+        num_states = len(self.state_vector)
+        new_state = np.copy(self.state_vector)
+
+        for i in range(num_states):
+            swapped_i = (i ^ (1 << qubit1)) ^ (1 << qubit2) if ((i >> qubit1) & 1) != ((i >> qubit2) & 1) else i
+            new_state[swapped_i] = self.state_vector[i]
+
+        self.state_vector = new_state
+        print(f"🔄 Swapped qubits {qubit1} and {qubit2}")
+    def apply_iqft(self):
+        """Applies Inverse Quantum Fourier Transform."""
+        print("\n🌀 Applying IQFT...")
+        
+        for i in range(self.num_qubits):
+            for j in range(i):
+                theta = -np.pi / (2 ** (i - j))  # Negative phase for inverse QFT
+                self.apply_controlled_phase(j, i, theta)
+            self.apply_hadamard(i)
+
+        # Reverse qubit order at the end
+        for i in range(self.num_qubits // 2):
+            self.swap_qubits(i, self.num_qubits - i - 1)
+
+        print("✅ IQFT Applied Successfully!\n")
 
