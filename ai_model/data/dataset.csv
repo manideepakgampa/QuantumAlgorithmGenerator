@@ -1,10 +1,10 @@
 Problem Type,Keywords,Algorithm
-Factoring,"factor, prime, divisor, modulus",Shor’s Algorithm
-Searching,"search, find, locate, lookup",Grover’s Algorithm
+Factoring,"factor, factorize, prime, divisor, modulus",Shorï¿½s Algorithm
+Searching,"search, find, locate, lookup",Groverï¿½s Algorithm
 Quantum Transform,"transform, fourier, QFT",Quantum Fourier Transform
 Black-Box Function,"oracle, function, unknown",Deutsch-Jozsa Algorithm
 Hidden String,"string, binary, find",Bernstein-Vazirani Algorithm
-Pattern Recognition,"pattern, similarity, comparison",Simon’s Algorithm
+Pattern Recognition,"pattern, similarity, comparison",Simonï¿½s Algorithm
 Optimization,"optimize, best, maximize, minimize",QAOA
 Eigenvalues,"matrix, eigenvalue, approximate",VQE
 Machine Learning,"classify, predict, SVM, dataset",QSVM
