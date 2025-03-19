@@ -7,21 +7,76 @@ class QuantumSimulator(ABC):
         self.state_vector = np.zeros(2**num_qubits, dtype=complex)
         self.state_vector[0] = 1  # Initialize in |0...0> state
         self.state = np.zeros(2**num_qubits, dtype=complex)  # ✅ Initialize zero state
-        self.state[0] = 1  # Set |0...0> as the initial state
+        self.state[0] = 1.0  # Set |0...0> as the initial state
 
+    def apply_pauli_x(self, target):
+        """Applies the Pauli-X (NOT) gate to a single qubit."""
+        print(f"🔄 Applied Pauli-X on qubit {target}")
+        X = np.array([[0, 1], [1, 0]])
+        self.apply_single_qubit_gate(X, target)
 
-    def apply_hadamard(self, qubits):
-        """Applies Hadamard gate to specified qubits."""
-        H = 1 / np.sqrt(2) * np.array([[1, 1], [1, -1]])  # Hadamard matrix
-        for q in qubits:
-            self.apply_single_qubit_gate(H, q)
+    def apply_pauli_z(self, target):
+        """Applies the Pauli-Z gate to a single qubit."""
+        print(f"🔄 Applied Pauli-Z on qubit {target}")
+        Z = np.array([[1, 0], [0, -1]])
+        self.apply_single_qubit_gate(Z, target)
+
+    def apply_hadamard(self, qubit):
+        H = np.array([[1, 1], [1, -1]]) / np.sqrt(2)
+        
+        print(f"⚡ Applying Hadamard on qubit {qubit}")
+
+        if self.state is None or len(self.state) == 0:
+            print("🚨 Error: Quantum state is uninitialized!")
+            return
+
+        self.state = self.apply_single_qubit_gate(H, qubit)
+
 
     def apply_single_qubit_gate(self, gate, qubit):
         """Applies a single-qubit gate to the given qubit."""
+        if self.state is None:
+            print("🚨 Error: Quantum state is uninitialized!")
+            return
         I = np.eye(2**qubit)
         rest = np.eye(2**(self.num_qubits - qubit - 1))
         full_gate = np.kron(I, np.kron(gate, rest))
         self.state_vector = full_gate @ self.state_vector  # Apply gate
+        gate_matrix = np.kron(I, np.kron(gate, np.eye(2**(self.num_qubits-qubit-1))))
+        self.state = gate_matrix @ self.state  # Apply gate transformation
+    
+    def apply_two_qubit_gate(self, gate_matrix, q1, q2):
+        """Apply a two-qubit gate (4x4 matrix) on qubits q1 and q2."""
+        num_qubits = len(self.state.shape)  # Total number of qubits
+        eye = np.eye(2**num_qubits)  # Identity matrix
+
+        # Create the full operator for the two-qubit gate
+        full_gate = np.kron(eye, gate_matrix)
+
+        # Apply the two-qubit gate to the quantum state
+        self.state = full_gate @ self.state
+
+    def apply_rx(self, qubit, theta):
+        """Apply RX rotation on a qubit."""
+        print(f"🔄 Rotating qubit {qubit} with angle {theta} radians")
+
+        # Create the RX rotation matrix
+        rx_matrix = np.array([[np.cos(theta / 2), -1j * np.sin(theta / 2)],
+                            [-1j * np.sin(theta / 2), np.cos(theta / 2)]])
+
+        # Apply it to the quantum state
+        self.state = self.apply_single_qubit_gate(rx_matrix, qubit)
+
+
+    def apply_cphase(self, q1, q2, theta):
+        """Apply Controlled-Phase (CPhase) gate between qubits q1 and q2 with angle theta."""
+        CPhase = np.array([
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, np.exp(1j * theta)]
+        ])
+        self.apply_two_qubit_gate(CPhase, q1, q2)
 
     def apply_cnot(self, control, target):
         """Applies a CNOT gate (control-target)."""
@@ -99,3 +154,8 @@ class QuantumSimulator(ABC):
 
         print("✅ IQFT Applied Successfully!\n")
 
+    def swap_qubits(self, q1, q2):
+        """Swaps two qubits in the quantum state."""
+        if q1 == q2:
+            return  # No need to swap if both qubits are the same
+    
