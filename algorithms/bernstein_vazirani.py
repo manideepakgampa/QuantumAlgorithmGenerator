@@ -20,9 +20,19 @@ class BernsteinVazirani:
 
     def run(self):
         """Runs the Bernstein-Vazirani algorithm"""
-        self.sim.apply_hadamard(range(self.n))  # Apply Hadamard to all n input qubits
+        
+        # Apply Hadamard to all input qubits
+        for qubit in range(self.n):
+            self.sim.apply_hadamard(qubit)
+        
         self.oracle()  # Apply the oracle (Hidden String encoding)
-        self.sim.apply_hadamard(range(self.n))  # Apply Hadamard again before measurement
+        
+        # ✅ No need to check for state initialization!
+        
+        # Apply Hadamard again after the oracle
+        for qubit in range(self.n):
+            self.sim.apply_hadamard(qubit)
+
 
         measured_state = self.sim.measure()
         print(f"🧐 Debug: Full Measured State: {measured_state}")

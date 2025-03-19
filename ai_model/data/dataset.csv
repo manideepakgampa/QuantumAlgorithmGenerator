@@ -1,0 +1,18 @@
+Problem Type,Keywords,Algorithm
+Factoring,"factor, prime, divisor, modulus",Shor’s Algorithm
+Searching,"search, find, locate, lookup",Grover’s Algorithm
+Quantum Transform,"transform, fourier, QFT",Quantum Fourier Transform
+Black-Box Function,"oracle, function, unknown",Deutsch-Jozsa Algorithm
+Hidden String,"string, binary, find",Bernstein-Vazirani Algorithm
+Pattern Recognition,"pattern, similarity, comparison",Simon’s Algorithm
+Optimization,"optimize, best, maximize, minimize",QAOA
+Eigenvalues,"matrix, eigenvalue, approximate",VQE
+Machine Learning,"classify, predict, SVM, dataset",QSVM
+Data Reduction,"PCA, compression, reduce dimensions",QPCA
+Cryptography,"encrypt, secure, key",QKD
+Secure Communication,"authentication, BB84",BB84 Protocol
+Quantum State Transfer,"teleport, transfer state",Quantum Teleportation
+Phase Estimation,"phase, estimate, QPE",QPE
+Linear Equations,"equation, solve, system",HHL Algorithm
+Simulation,"simulate, model, monte carlo",Quantum Monte Carlo
+Pathfinding,"walk, path, graph",Quantum Walks

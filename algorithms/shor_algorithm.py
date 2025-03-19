@@ -31,7 +31,8 @@ def quantum_order_finding(a, N):
     full_measurement = sim.measure()  # Get full measured state
     r = full_measurement[:2]  # Extract first 2 qubits manually
 
-    sim.apply_hadamard([0, 1])  # Superposition
+    for qubit in range(2):  
+        sim.apply_hadamard(qubit)
     full_measurement = sim.measure()  # Measure again after Hadamard
     measured_r = full_measurement[:2]  # Extract first 2 qubits manually
 
@@ -81,7 +82,7 @@ class ShorQuantumSimulator(QuantumSimulator):
 
 # Example Usage
 if __name__ == "__main__":
-    N = 153947035839 # Example number
+    N = 24680 # Example number
     result = shor_algorithm(N)
     if result:
         print("Shor's Algorithm for Integer Factorization")

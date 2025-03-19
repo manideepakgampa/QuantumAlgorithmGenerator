@@ -14,12 +14,13 @@ class DeutschJozsa:
         """
         Implements the oracle function:
         - If the function is constant, it does nothing.
-        - If the function is balanced, it applies a phase flip to half the states.
+        - If the function is balanced, it applies a phase flip (Z gate) to some qubits.
         """
         if self.function_type == "balanced":
-            # Flip the phase of half the states
-            for i in range(2 ** (self.n - 1)):  # Flip only half of them
-                self.sim.apply_phase_flip(format(int(i), f'0{self.n}b'))
+            balanced_qubits = np.random.choice(range(self.n), size=self.n//2, replace=False)
+            for qubit in balanced_qubits:
+                print(f"⚡ Applying Phase Flip on qubit {qubit}")
+                self.sim.apply_phase_flip(qubit)
 
     def run(self):
         """
@@ -28,13 +29,15 @@ class DeutschJozsa:
         print(f"🚀 Running Deutsch-Jozsa Algorithm with {self.n} qubits ({self.function_type} function)")
         
         # Step 1: Apply Hadamard to all qubits
-        self.sim.apply_hadamard(range(self.n))
-        
+        for qubit in range(self.n):
+            self.sim.apply_hadamard(qubit)
+
         # Step 2: Apply Oracle
         self.oracle()
         
         # Step 3: Apply Hadamard to all qubits again
-        self.sim.apply_hadamard(range(self.n))
+        for qubit in range(self.n):
+            self.sim.apply_hadamard(qubit)
 
         # Step 4: Measure the result
         result = self.sim.measure()
@@ -44,13 +47,14 @@ class DeutschJozsa:
             print("✅ Function is CONSTANT")
         else:
             print("✅ Function is BALANCED")
+
 class DeutschJozsaSimulator(QuantumSimulator):
     def measure(self):
-        """Custom measurement: Extract first n-1 bits (Function is constant or balanced)"""
-        measured_state = super().measure()
-        extracted_bits = measured_state[:self.num_qubits-1]  # Ignore last qubit
-        print(f"🧐 Custom Measurement for Deutsch-Jozsa: {extracted_bits}")
-        return extracted_bits
+        probabilities = np.abs(self.state) ** 2  # Compute probabilities
+        probabilities = probabilities.flatten()  # Ensure it's 1D\
+        result = np.random.choice(len(probabilities), p=probabilities)
+        return bin(result)[2:].zfill(self.n)  # Convert to binary string
+
 
 # Example Usage
 dj = DeutschJozsa(n=3, function_type="balanced")  # Change to "constant" for testing

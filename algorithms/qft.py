@@ -10,7 +10,7 @@ class QuantumFourierTransform:
     def apply_qft(self):
         """Applies QFT to all qubits."""
         for i in range(self.num_qubits):
-            self.sim.apply_hadamard([i])  # Apply Hadamard gate
+            self.sim.apply_hadamard(i)  # Apply Hadamard gate
             for j in range(i + 1, self.num_qubits):
                 theta = np.pi / (2 ** (j - i))
                 self.sim.apply_controlled_phase(i, j, theta)  # Apply controlled phase shift
