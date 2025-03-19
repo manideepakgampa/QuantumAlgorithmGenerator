@@ -153,9 +153,3 @@ class QuantumSimulator(ABC):
             self.swap_qubits(i, self.num_qubits - i - 1)
 
         print("✅ IQFT Applied Successfully!\n")
-
-    def swap_qubits(self, q1, q2):
-        """Swaps two qubits in the quantum state."""
-        if q1 == q2:
-            return  # No need to swap if both qubits are the same
-    
