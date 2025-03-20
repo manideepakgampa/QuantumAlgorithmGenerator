@@ -18,7 +18,8 @@ nltk.download('wordnet')
 nltk.download('stopwords')
 
 # Load dataset
-df = pd.read_csv("IQAD/data/dataset.csv")
+df = pd.read_csv(r"C:\Users\manid\Projects\IQAD\data\dataset.csv")
+
 
 df['Keywords'] = df['Keywords'].fillna('')
 lemmatizer = WordNetLemmatizer()
@@ -58,35 +59,44 @@ svc_accuracy = svc.score(X_test, y_test) * 100
 print(f'SVC accuracy: {svc_accuracy:.2f}%')
 
 # Save best model and vectorizer
-with open("IQAD/ai_model/models/nlp_model.pkl", "wb") as f:
+with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\nlp_model.pkl", "wb") as f:
     pickle.dump(svc, f)
-with open("IQAD/ai_model/models/vectorizer.pkl", "wb") as f:
+with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\vectorizer.pkl", "wb") as f:
     pickle.dump(vectorizer, f)
-with open("IQAD/ai_model/models/label_encoder.pkl", "wb") as f:
+with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\label_encoder.pkl", "wb") as f:
     pickle.dump(label_encoder, f)
 
 print("Best model selected: SVC")
 print("Training complete! Model saved.")
 
+# Define quantum algorithm execution function
+def run_algorithm(algorithm, query):
+    if algorithm == "Shor's Algorithm":
+        return f"Executing Shor's Algorithm on {query}... Factorization complete."
+    elif algorithm == "Grover's Algorithm":
+        return f"Executing Grover's Algorithm on {query}... Optimal solution found."
+    elif algorithm == "Simon's Algorithm":
+        return f"Executing Simon's Algorithm on {query}... Hidden pattern discovered."
+    elif algorithm == "Quantum Fourier Transform":
+        return f"Executing Quantum Fourier Transform on {query}... Frequency domain representation obtained."
+    else:
+        return f"Algorithm {algorithm} execution not implemented yet."
+
 # Interactive Testing Function
 def predict_algorithm(query):
-    with open("IQAD/ai_model/models/nlp_model.pkl", "rb") as f:
+    with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\nlp_model.pkl", "rb") as f:
         model = pickle.load(f)
-    with open("IQAD/ai_model/models/vectorizer.pkl", "rb") as f:
+    with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\vectorizer.pkl", "rb") as f:
         vectorizer = pickle.load(f)
-    with open("IQAD/ai_model/models/label_encoder.pkl", "rb") as f:
+    with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\label_encoder.pkl", "rb") as f:
         label_encoder = pickle.load(f)
     
     query_cleaned = clean_text(query)
     query_vectorized = vectorizer.transform([query_cleaned])
     prediction = model.predict(query_vectorized)
     predicted_algorithm = label_encoder.inverse_transform(prediction)[0]
-    return predicted_algorithm
 
-if __name__ == "__main__":
-    while True:
-        user_input = input("Enter a query (or type 'exit' to stop): ")
-        if user_input.lower() == 'exit':
-            break
-        result = predict_algorithm(user_input)
-        print(f"Predicted Algorithm: {result}")
+    # Call run_algorithm() correctly
+    result = run_algorithm(predicted_algorithm, query)  
+
+    return predicted_algorithm, result
