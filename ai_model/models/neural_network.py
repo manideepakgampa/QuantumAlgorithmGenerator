@@ -14,6 +14,13 @@ class FeedforwardNN(nn.Module):
         x = self.relu(x)
         x = self.output(x)
         return x
+    def predict(self, problem_type, extracted_features):
+        """Predicts the best quantum algorithm using the trained model."""
+        with torch.no_grad():
+            output = self(extracted_features)
+            predicted_class = torch.argmax(output, dim=1).item()
+        return predicted_class  # Should return the algorithm index
+
 
 def train_model(model, dataloader, criterion, optimizer, num_epochs=10):
     for epoch in range(num_epochs):

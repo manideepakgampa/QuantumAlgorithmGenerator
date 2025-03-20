@@ -2,19 +2,31 @@ import importlib
 import pandas as pd
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'ai_model')))
-
+import torch
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))  # Move up to project root
 from ai_model.models.nlp_model import NLPModel
 from ai_model.models.neural_network import FeedforwardNN
 
+# Define paths
+dataset_path = r"C:\Users\manid\Projects\IQAD\data\dataset.csv"
+model_path = r"C:\Users\manid\Projects\IQAD\ai_model\models\iqad_trained_model.pth"  # Trained PyTorch model
 
-# Load dataset for training NLP model
-dataset_path = os.path.join("data", "dataset.csv")
+# Load dataset
 dataset = pd.read_csv(dataset_path)
 
-# Initialize the NLP and Neural Network models
-nlp_model = NLPModel(dataset)  # Assuming this model uses the dataset for training
-nn_model = FeedforwardNN()  # Neural Network should be pre-trained or trainable
+# Initialize the NLP Model
+nlp_model = NLPModel(dataset_path)  
+
+# Load trained PyTorch Neural Network Model
+if os.path.exists(model_path):
+    nn_model = FeedforwardNN(input_size=41, hidden_size=100, output_size=15) # Match output size with dataset
+    nn_model.load_state_dict(torch.load(model_path))
+    nn_model.eval()  # Set to evaluation mode
+    print("✅ PyTorch Model loaded successfully!")
+else:
+    print("❌ Error: Trained model not found!")
+    sys.exit(1)
+
 
 def execute_algorithm(algorithm_name, extracted_features):
     """Dynamically imports and runs the selected quantum algorithm."""
@@ -31,6 +43,7 @@ def execute_algorithm(algorithm_name, extracted_features):
     except ImportError:
         return f"❌ Error: Algorithm '{algorithm_name}' not implemented."
 
+
 def main():
     print("🔍 Enter your problem description:")
     user_query = input("> ")
@@ -42,9 +55,16 @@ def main():
     print(f"✅ Problem Type: {problem_type}")
     print(f"✅ Extracted Features: {extracted_features}")
 
-    # Step 2: Predict the quantum algorithm using the Neural Network model
-    predicted_algorithm = nn_model.predict(problem_type, extracted_features)
+    # Convert extracted features to tensor for PyTorch model
+    input_tensor = torch.tensor(extracted_features, dtype=torch.float32).unsqueeze(0)  # Add batch dimension
 
+    # Step 2: Predict the quantum algorithm using the Neural Network model
+    with torch.no_grad():
+        predicted_algorithm_idx = nn_model(input_tensor)
+        predicted_label = torch.argmax(predicted_algorithm_idx, dim=1).item()
+
+    # Map the predicted label to the algorithm name
+    predicted_algorithm = dataset.iloc[predicted_label]["Algorithms"]
     print(f"✅ Selected Quantum Algorithm: {predicted_algorithm}")
 
     # Step 3: Execute the selected quantum algorithm
@@ -52,6 +72,7 @@ def main():
     
     # Step 4: Display the result from the quantum algorithm
     print(f"🔹 Solution Output: {output}")
+
 
 if __name__ == "__main__":
     main()

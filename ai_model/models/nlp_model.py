@@ -4,7 +4,10 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
 import torch
 from torch.utils.data import DataLoader
-from neural_network import FeedforwardNN, initialize_model, train_model
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from ai_model.models.neural_network import FeedforwardNN, initialize_model, train_model
 
 class NLPModel:
     def __init__(self, dataset_path='IQAD/ai_model/data/dataset.csv'):
@@ -51,3 +54,11 @@ class NLPModel:
     
     def get_label_encoder(self):
         return self.label_encoder
+    def classify(self, user_query):
+        """Classifies user input and extracts features using TF-IDF."""
+        query_tfidf = self.vectorizer.transform([user_query]).toarray()
+        query_tensor = torch.tensor(query_tfidf, dtype=torch.float32)
+
+        # Use a simple rule-based approach for now (replace with ML model later)
+        predicted_label = self.y_train[0]  # Dummy prediction (replace with NN later)
+        return self.label_encoder.inverse_transform([predicted_label])[0], query_tensor
