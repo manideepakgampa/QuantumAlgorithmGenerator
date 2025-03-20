@@ -1,64 +1,92 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
+import numpy as np
+import re
+import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
-import torch
-from torch.utils.data import DataLoader
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from ai_model.models.neural_network import FeedforwardNN, initialize_model, train_model
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.preprocessing import LabelEncoder
+from nltk.stem import WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import nltk
+from sklearn.metrics import accuracy_score
 
-class NLPModel:
-    def __init__(self, dataset_path='IQAD/ai_model/data/dataset.csv'):
-        # Load the dataset
-        self.df = pd.read_csv(dataset_path)
-        
-        # Extract keywords and algorithms
-        self.keywords = self.df['Keywords'].values
-        self.algorithms = self.df['Algorithm'].values
-        
-        # Encode the labels (Algorithm)
-        self.label_encoder = LabelEncoder()
-        self.encoded_labels = self.label_encoder.fit_transform(self.algorithms)
-        
-        # Split the data into train and test sets
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.keywords, self.encoded_labels, test_size=0.2, random_state=42
-        )
-        
-        # Vectorize keywords using TF-IDF
-        self.vectorizer = TfidfVectorizer(max_features=5000)
-        self.X_train_tfidf = self.vectorizer.fit_transform(self.X_train).toarray()
-        self.X_test_tfidf = self.vectorizer.transform(self.X_test).toarray()
+# Download necessary NLTK data
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('stopwords')
 
-        # Convert to PyTorch tensors
-        self.X_train_tensor = torch.tensor(self.X_train_tfidf, dtype=torch.float32)
-        self.X_test_tensor = torch.tensor(self.X_test_tfidf, dtype=torch.float32)
-        self.y_train_tensor = torch.tensor(self.y_train, dtype=torch.long)
-        self.y_test_tensor = torch.tensor(self.y_test, dtype=torch.long)
-        
-        # Create Dataset and DataLoader
-        self.train_dataset = torch.utils.data.TensorDataset(self.X_train_tensor, self.y_train_tensor)
-        self.test_dataset = torch.utils.data.TensorDataset(self.X_test_tensor, self.y_test_tensor)
-        self.train_loader = DataLoader(self.train_dataset, batch_size=32, shuffle=True)
-        self.test_loader = DataLoader(self.test_dataset, batch_size=32)
+# Load dataset
+df = pd.read_csv("IQAD/data/dataset.csv")
 
-    def train(self, input_size, hidden_size, output_size, num_epochs=10):
-        model, criterion, optimizer = initialize_model(input_size, hidden_size, output_size)
-        train_model(model, self.train_loader, criterion, optimizer, num_epochs)
-        return model
+df['Keywords'] = df['Keywords'].fillna('')
+lemmatizer = WordNetLemmatizer()
+stop_words = set(stopwords.words('english'))
 
-    def get_encoded_labels(self):
-        return self.encoded_labels
+def clean_text(text):
+    text = text.lower().strip()
+    text = re.sub(r'[^a-zA-Z0-9 ]', '', text)
+    words = word_tokenize(text)
+    words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
+    return ' '.join(words)
+
+# Expand dataset
+expanded_data = []
+for _, row in df.iterrows():
+    keywords = [clean_text(k) for k in row['Keywords'].split(',')]
+    for keyword in keywords:
+        expanded_data.append({'Keyword': keyword, 'Algorithm': row['Algorithm']})
+
+expanded_df = pd.DataFrame(expanded_data)
+
+# Feature extraction
+vectorizer = TfidfVectorizer(ngram_range=(1,2), max_features=5000, stop_words='english')
+X = vectorizer.fit_transform(expanded_df['Keyword'])
+
+# Encode labels
+label_encoder = LabelEncoder()
+y = label_encoder.fit_transform(expanded_df['Algorithm'])
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+# Train SVC
+svc = SVC(kernel='linear', random_state=42)
+svc.fit(X_train, y_train)
+svc_accuracy = svc.score(X_test, y_test) * 100
+print(f'SVC accuracy: {svc_accuracy:.2f}%')
+
+# Save best model and vectorizer
+with open("IQAD/ai_model/models/nlp_model.pkl", "wb") as f:
+    pickle.dump(svc, f)
+with open("IQAD/ai_model/models/vectorizer.pkl", "wb") as f:
+    pickle.dump(vectorizer, f)
+with open("IQAD/ai_model/models/label_encoder.pkl", "wb") as f:
+    pickle.dump(label_encoder, f)
+
+print("Best model selected: SVC")
+print("Training complete! Model saved.")
+
+# Interactive Testing Function
+def predict_algorithm(query):
+    with open("IQAD/ai_model/models/nlp_model.pkl", "rb") as f:
+        model = pickle.load(f)
+    with open("IQAD/ai_model/models/vectorizer.pkl", "rb") as f:
+        vectorizer = pickle.load(f)
+    with open("IQAD/ai_model/models/label_encoder.pkl", "rb") as f:
+        label_encoder = pickle.load(f)
     
-    def get_label_encoder(self):
-        return self.label_encoder
-    def classify(self, user_query):
-        """Classifies user input and extracts features using TF-IDF."""
-        query_tfidf = self.vectorizer.transform([user_query]).toarray()
-        query_tensor = torch.tensor(query_tfidf, dtype=torch.float32)
+    query_cleaned = clean_text(query)
+    query_vectorized = vectorizer.transform([query_cleaned])
+    prediction = model.predict(query_vectorized)
+    predicted_algorithm = label_encoder.inverse_transform(prediction)[0]
+    return predicted_algorithm
 
-        # Use a simple rule-based approach for now (replace with ML model later)
-        predicted_label = self.y_train[0]  # Dummy prediction (replace with NN later)
-        return self.label_encoder.inverse_transform([predicted_label])[0], query_tensor
+if __name__ == "__main__":
+    while True:
+        user_input = input("Enter a query (or type 'exit' to stop): ")
+        if user_input.lower() == 'exit':
+            break
+        result = predict_algorithm(user_input)
+        print(f"Predicted Algorithm: {result}")

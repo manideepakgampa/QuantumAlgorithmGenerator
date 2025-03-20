@@ -1,18 +1,110 @@
-Problem Type,Keywords,Algorithm
-Factoring,"factor, factorize, prime, divisor, modulus",Shor�s Algorithm
-Searching,"search, find, locate, lookup",Grover�s Algorithm
-Quantum Transform,"transform, fourier, QFT",Quantum Fourier Transform
-Black-Box Function,"oracle, function, unknown",Deutsch-Jozsa Algorithm
-Hidden String,"string, binary, find",Bernstein-Vazirani Algorithm
-Pattern Recognition,"pattern, similarity, comparison",Simon�s Algorithm
-Optimization,"optimize, best, maximize, minimize",QAOA
-Eigenvalues,"matrix, eigenvalue, approximate",VQE
-Machine Learning,"classify, predict, SVM, dataset",QSVM
-Data Reduction,"PCA, compression, reduce dimensions",QPCA
-Cryptography,"encrypt, secure, key",QKD
-Secure Communication,"authentication, BB84",BB84 Protocol
-Quantum State Transfer,"teleport, transfer state",Quantum Teleportation
-Phase Estimation,"phase, estimate, QPE",QPE
-Linear Equations,"equation, solve, system",HHL Algorithm
-Simulation,"simulate, model, monte carlo",Quantum Monte Carlo
-Pathfinding,"walk, path, graph",Quantum Walks
+Keywords,Algorithm
+factor,Shor's Algorithm
+factorize,Shor's Algorithm
+prime,Shor's Algorithm
+divisor,Shor's Algorithm
+modulus,Shor's Algorithm
+decompose,Shor's Algorithm
+breakdown,Shor's Algorithm
+factoring,Shor's Algorithm
+search,Grover's Algorithm
+find,Grover's Algorithm
+locate,Grover's Algorithm
+lookup,Grover's Algorithm
+scan,Grover's Algorithm
+detect,Grover's Algorithm
+searching,Grover's Algorithm
+transform,Quantum Fourier Transform
+fourier,Quantum Fourier Transform
+QFT,Quantum Fourier Transform
+convert,Quantum Fourier Transform
+modify,Quantum Fourier Transform
+alter,Quantum Fourier Transform
+quantum transform,Quantum Fourier Transform
+oracle,Deutsch-Jozsa Algorithm
+function,Deutsch-Jozsa Algorithm
+unknown,Deutsch-Jozsa Algorithm
+black-box,Deutsch-Jozsa Algorithm
+hidden function,Deutsch-Jozsa Algorithm
+black-box function,Deutsch-Jozsa Algorithm
+string,Bernstein-Vazirani Algorithm
+binary,Bernstein-Vazirani Algorithm
+find,Bernstein-Vazirani Algorithm
+sequence,Bernstein-Vazirani Algorithm
+pattern,Bernstein-Vazirani Algorithm
+substring,Bernstein-Vazirani Algorithm
+hidden string,Bernstein-Vazirani Algorithm
+period,Simon's Algorithm
+pattern,Simon's Algorithm
+similarity,Simon's Algorithm
+comparison,Simon's Algorithm
+recognition,Simon's Algorithm
+analysis,Simon's Algorithm
+pattern recognition,Simon's Algorithm
+optimize,QAOA
+best,QAOA
+maximize,QAOA
+minimize,QAOA
+improve,QAOA
+refine,QAOA
+optimization,QAOA
+matrix,VQE
+eigenvalue,VQE
+approximate,VQE
+eigenvector,VQE
+spectrum,VQE
+eigenvalues,VQE
+classify,QSVM
+predict,QSVM
+SVM,QSVM
+dataset,QSVM
+categorize,QSVM
+group,QSVM
+machine learning,QSVM
+PCA,QPCA
+compression,QPCA
+reduce dimensions,QPCA
+dimensionality reduction,QPCA
+data reduction,QPCA
+encrypt,QKD
+secure,QKD
+key,QKD
+protect,QKD
+cipher,QKD
+cryptographic,QKD
+cryptography,QKD
+authentication,BB84 Protocol
+BB84,BB84 Protocol
+cryptographic security,BB84 Protocol
+secure communication,BB84 Protocol
+teleport,Quantum Teleportation
+transfer state,Quantum Teleportation
+relocate,Quantum Teleportation
+quantum movement,Quantum Teleportation
+quantum state transfer,Quantum Teleportation
+phase,QPE
+estimate,QPE
+QPE,QPE
+angle,QPE
+wave property,QPE
+phase estimation,QPE
+equation,HHL Algorithm
+solve,HHL Algorithm
+system,HHL Algorithm
+formula,HHL Algorithm
+mathematical expression,HHL Algorithm
+linear equations,HHL Algorithm
+simulate,Quantum Monte Carlo
+model,Quantum Monte Carlo
+monte carlo,Quantum Monte Carlo
+imitate,Quantum Monte Carlo
+replicate,Quantum Monte Carlo
+probabilistic,Quantum Monte Carlo
+simulation,Quantum Monte Carlo
+walk,Quantum Walks
+path,Quantum Walks
+graph,Quantum Walks
+traverse,Quantum Walks
+navigate,Quantum Walks
+routing,Quantum Walks
+pathfinding,Quantum Walks
