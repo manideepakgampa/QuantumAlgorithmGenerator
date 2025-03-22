@@ -7,7 +7,7 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
 
 # Load dataset
-dataset_path = "C:\Users\Noel.NOELKING\Desk-files\IQAD\quantum\IQAD\data\quantum_queries_dataset.csv"  # Update path if needed
+dataset_path = "C:\Users\manid\Projects\IQAD\data\quantum_queries_dataset.csv"  # Update path if needed
 df = pd.read_csv(dataset_path)
 
 # Encode categorical labels (problem types -> algorithm names)
