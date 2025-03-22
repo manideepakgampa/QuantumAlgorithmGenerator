@@ -87,3 +87,35 @@ with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\label_encoder.pkl", "wb
     pickle.dump(label_encoder, f)
 
 print("Training complete! Best model saved.")
+
+# Define quantum algorithm execution function
+def run_algorithm(algorithm, query):
+    if algorithm == "Shor's Algorithm":
+        return f"Executing Shor's Algorithm on {query}... Factorization complete."
+    elif algorithm == "Grover's Algorithm":
+        return f"Executing Grover's Algorithm on {query}... Optimal solution found."
+    elif algorithm == "Simon's Algorithm":
+        return f"Executing Simon's Algorithm on {query}... Hidden pattern discovered."
+    elif algorithm == "Quantum Fourier Transform":
+        return f"Executing Quantum Fourier Transform on {query}... Frequency domain representation obtained."
+    else:
+        return f"Algorithm {algorithm} not found."
+
+# Interactive Testing Function
+def predict_algorithm(query):
+    with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\nlp_model.pkl", "rb") as f:
+        model = pickle.load(f)
+    with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\vectorizer.pkl", "rb") as f:
+        vectorizer = pickle.load(f)
+    with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\label_encoder.pkl", "rb") as f:
+        label_encoder = pickle.load(f)
+    
+    query_cleaned = clean_text(query)
+    query_vectorized = vectorizer.transform([query_cleaned])
+    prediction = model.predict(query_vectorized)
+    predicted_algorithm = label_encoder.inverse_transform(prediction)[0]
+
+    # Call run_algorithm() correctly
+    result = run_algorithm(predicted_algorithm, query)  
+
+    return predicted_algorithm, result
