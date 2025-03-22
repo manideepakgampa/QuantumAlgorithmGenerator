@@ -160,7 +160,8 @@
           .then((data) => {
             let botMsg = document.createElement("div");
             botMsg.classList.add("message", "bot-msg");
-            botMsg.innerHTML = `Bot: ${data.predicted_algorithm} <br> ${data.result}`;
+            botMsg.innerHTML = `Bot: ${data.predicted_algorithm} <br> ${data.result}
+            <br> ${data.factors}`;
             chatBox.appendChild(botMsg);
             chatBox.scrollTop = chatBox.scrollHeight;
           })

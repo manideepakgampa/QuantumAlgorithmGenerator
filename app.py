@@ -4,15 +4,17 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from ai_model.models.nlp_model import clean_text
+from algorithms import shor_algorithm
+import re
 
 app = Flask(__name__)
 
 # Load saved models
-with open("ai_model/models/nlp_model.pkl", "rb") as f:
+with open("C:\\Users\\Noel.NOELKING\\Desk-files\\IQAD\\quantum\\IQAD\\ai_model\\models\\nlp_model.pkl", "rb") as f:
     model = pickle.load(f)
-with open("ai_model/models/vectorizer.pkl", "rb") as f:
+with open("C:\\Users\\Noel.NOELKING\\Desk-files\\IQAD\\quantum\\IQAD\\ai_model\\models\\vectorizer.pkl", "rb") as f:
     vectorizer = pickle.load(f)
-with open("ai_model/models/label_encoder.pkl", "rb") as f:
+with open("C:\\Users\\Noel.NOELKING\\Desk-files\\IQAD\\quantum\\IQAD\\ai_model\\models\\label_encoder.pkl", "rb") as f:
     label_encoder = pickle.load(f)
 
 def predict_algorithm(query):
@@ -42,7 +44,21 @@ def predict():
         return jsonify({"response": "This is invalid. Please enter a valid query."})
 
     predicted_algorithm, result = predict_algorithm(query)
-    return jsonify({"predicted_algorithm": predicted_algorithm, "result": result})
+
+    # Algorithm implementation
+    if predicted_algorithm == "Shor's Algorithm":
+        match = re.search(r"\b\d+\b", query)
+        if match:
+            number = match.group(0)
+            factors = shor_algorithm.shor_algorithm(int(number))
+            factor_statement = f"Factors of {number}: {factors}"
+
+    else:
+        factor_statement = ""
+
+
+    return jsonify({"predicted_algorithm": predicted_algorithm, "result": result, "factors":factor_statement})
+
 
 if __name__ == "__main__":
     app.run(debug=True)

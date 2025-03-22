@@ -5,20 +5,22 @@ import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import nltk
 from sklearn.metrics import accuracy_score
+from sklearn.ensemble import GradientBoostingClassifier
 
 # Download necessary NLTK data
-nltk.download('punkt')
+nltk.download('punkt_tab')
 nltk.download('wordnet')
 nltk.download('stopwords')
 
 # Load dataset
-df = pd.read_csv(r"C:\Users\manid\Projects\IQAD\data\dataset.csv")
+df = pd.read_csv(r"C:\Users\Noel.NOELKING\Desk-files\IQAD\quantum\IQAD\data\dataset.csv")
 
 
 df['Keywords'] = df['Keywords'].fillna('')
@@ -53,17 +55,26 @@ y = label_encoder.fit_transform(expanded_df['Algorithm'])
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
 # Train SVC
-svc = SVC(kernel='linear', random_state=42)
-svc.fit(X_train, y_train)
-svc_accuracy = svc.score(X_test, y_test) * 100
-print(f'SVC accuracy: {svc_accuracy:.2f}%')
+# svc = SVC(kernel='linear', random_state=42)
+# svc.fit(X_train, y_train)
+# svc_accuracy = svc.score(X_test, y_test) * 100
+# print(f'SVC accuracy: {svc_accuracy:.2f}%')
+
+# Train Random Forest
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+# rf_accuracy = rf.score(X_test, y_test) * 100
+
+# Train GradientBoostingClassifier
+gbc = GradientBoostingClassifier(n_estimators=100, random_state=0, max_depth=1, learning_rate=0.1)
+gbc.fit(X_train, y_train)
 
 # Save best model and vectorizer
-with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\nlp_model.pkl", "wb") as f:
-    pickle.dump(svc, f)
-with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\vectorizer.pkl", "wb") as f:
+with open(r"C:\Users\Noel.NOELKING\Desk-files\IQAD\quantum\IQAD\ai_model\models\nlp_model.pkl", "wb") as f:
+    pickle.dump(gbc, f)
+with open(r"C:\Users\Noel.NOELKING\Desk-files\IQAD\quantum\IQAD\ai_model\models\vectorizer.pkl", "wb") as f:
     pickle.dump(vectorizer, f)
-with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\label_encoder.pkl", "wb") as f:
+with open(r"C:\Users\Noel.NOELKING\Desk-files\IQAD\quantum\IQAD\ai_model\models\label_encoder.pkl", "wb") as f:
     pickle.dump(label_encoder, f)
 
 print("Best model selected: SVC")
@@ -80,15 +91,15 @@ def run_algorithm(algorithm, query):
     elif algorithm == "Quantum Fourier Transform":
         return f"Executing Quantum Fourier Transform on {query}... Frequency domain representation obtained."
     else:
-        return f"Algorithm {algorithm} execution not implemented yet."
+        return f"Algorithm {algorithm} not found."
 
 # Interactive Testing Function
 def predict_algorithm(query):
-    with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\nlp_model.pkl", "rb") as f:
+    with open(r"C:\Users\Noel.NOELKING\Desk-files\IQAD\quantum\IQAD\ai_model\models\nlp_model.pkl", "rb") as f:
         model = pickle.load(f)
-    with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\vectorizer.pkl", "rb") as f:
+    with open(r"C:\Users\Noel.NOELKING\Desk-files\IQAD\quantum\IQAD\ai_model\models\vectorizer.pkl", "rb") as f:
         vectorizer = pickle.load(f)
-    with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\label_encoder.pkl", "rb") as f:
+    with open(r"C:\Users\Noel.NOELKING\Desk-files\IQAD\quantum\IQAD\ai_model\models\label_encoder.pkl", "rb") as f:
         label_encoder = pickle.load(f)
     
     query_cleaned = clean_text(query)
