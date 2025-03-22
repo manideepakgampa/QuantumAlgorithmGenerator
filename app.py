@@ -50,7 +50,7 @@ def predict():
         match = re.search(r"\b\d+\b", query)
         if match:
             number = match.group(0)
-            factors = shor_algorithm.shor_algorithm(int(number))
+            factors = shor_algorithm.factorize(int(number))
             factor_statement = f"Factors of {number}: {factors}"
 
     else:

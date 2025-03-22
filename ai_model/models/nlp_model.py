@@ -55,7 +55,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 log_reg = LogisticRegression(max_iter=1000, C=1.0, random_state=42)
 log_reg.fit(X_train, y_train)
 log_reg_acc = accuracy_score(y_test, log_reg.predict(X_test)) * 100
-print(f'Logistic Regression accuracy: {log_reg_acc:.2f}%')
+# print(f'Logistic Regression accuracy: {log_reg_acc:.2f}%')
 
 # Train MLP Classifier
 mlp = MLPClassifier(hidden_layer_sizes=(100,100), max_iter=1000, solver='adam', alpha=0.01, random_state=42)
