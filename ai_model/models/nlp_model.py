@@ -61,19 +61,19 @@ log_reg_acc = accuracy_score(y_test, log_reg.predict(X_test)) * 100
 mlp = MLPClassifier(hidden_layer_sizes=(100,100), max_iter=1000, solver='adam', alpha=0.01, random_state=42)
 mlp.fit(X_train, y_train)
 mlp_acc = accuracy_score(y_test, mlp.predict(X_test)) * 100
-print(f'MLP Classifier accuracy: {2 * mlp_acc:.2f}%')
+print(f'MLP Classifier accuracy: {mlp_acc:.2f}%')
 
 # Train Gradient Boosting Classifier
 gbc = GradientBoostingClassifier(n_estimators=200, max_depth=3, learning_rate=0.05, random_state=42)
 gbc.fit(X_train, y_train)
 gbc_acc = accuracy_score(y_test, gbc.predict(X_test)) * 100
-print(f'Gradient Boosting accuracy: {2 * gbc_acc:.2f}%')
+print(f'Gradient Boosting accuracy: {gbc_acc:.2f}%')
 
 # Train Random Forest
 rf = RandomForestClassifier(n_estimators=200, random_state=42)
 rf.fit(X_train, y_train)
 rf_acc = accuracy_score(y_test, rf.predict(X_test)) * 100
-print(f'Random Forest accuracy: {2 * rf_acc:.2f}%')
+print(f'Random Forest accuracy: {rf_acc:.2f}%')
 
 # Select best model
 best_model = max([(log_reg, log_reg_acc), (mlp, mlp_acc), (gbc, gbc_acc), (rf, rf_acc)], key=lambda x: x[1])[0]
