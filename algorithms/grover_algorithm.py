@@ -63,6 +63,6 @@ num_qubits = 3
 target_state = 5  # Target state is |101>
 iterations = 2  # Optimal number of iterations for 3 qubits
 
-grover = GroverAlgorithm(num_qubits, target_state)
-result = grover.run(iterations)
-grover.visualize()
+# grover = GroverAlgorithm(num_qubits, target_state)
+# result = grover.run(iterations)
+# grover.visualize()
