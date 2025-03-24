@@ -3,6 +3,8 @@ import numpy as np
 import re
 import pickle
 import nltk
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -11,7 +13,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 
 # Download necessary NLTK data
 nltk.download('punkt')
@@ -51,32 +53,50 @@ y = label_encoder.fit_transform(expanded_df['Algorithm'])
 # Split dataset
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-# Train Logistic Regression
-log_reg = LogisticRegression(max_iter=1000, C=1.0, random_state=42)
-log_reg.fit(X_train, y_train)
-log_reg_acc = accuracy_score(y_test, log_reg.predict(X_test)) * 100
-# print(f'Logistic Regression accuracy: {log_reg_acc:.2f}%')
+# Train models
+models = {
+    "Logistic Regression": LogisticRegression(max_iter=1000, C=1.0, random_state=42),
+    "MLP Classifier": MLPClassifier(hidden_layer_sizes=(100,100), max_iter=1000, solver='adam', alpha=0.01, random_state=42),
+    "Gradient Boosting": GradientBoostingClassifier(n_estimators=200, max_depth=3, learning_rate=0.05, random_state=42),
+    "Random Forest": RandomForestClassifier(n_estimators=200, random_state=42)
+}
 
-# Train MLP Classifier
-mlp = MLPClassifier(hidden_layer_sizes=(100,100), max_iter=1000, solver='adam', alpha=0.01, random_state=42)
-mlp.fit(X_train, y_train)
-mlp_acc = accuracy_score(y_test, mlp.predict(X_test)) * 100
-print(f'MLP Classifier accuracy: {mlp_acc:.2f}%')
+scores = {}
 
-# Train Gradient Boosting Classifier
-gbc = GradientBoostingClassifier(n_estimators=200, max_depth=3, learning_rate=0.05, random_state=42)
-gbc.fit(X_train, y_train)
-gbc_acc = accuracy_score(y_test, gbc.predict(X_test)) * 100
-print(f'Gradient Boosting accuracy: {gbc_acc:.2f}%')
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    
+    # Compute scores
+    acc = accuracy_score(y_test, y_pred) * 100
+    precision = precision_score(y_test, y_pred, average='weighted') * 100
+    recall = recall_score(y_test, y_pred, average='weighted') * 100
+    f1 = f1_score(y_test, y_pred, average='weighted') * 100
 
-# Train Random Forest
-rf = RandomForestClassifier(n_estimators=200, random_state=42)
-rf.fit(X_train, y_train)
-rf_acc = accuracy_score(y_test, rf.predict(X_test)) * 100
-print(f'Random Forest accuracy: {rf_acc:.2f}%')
+    # Store scores
+    scores[name] = {
+        "Accuracy": acc,
+        "Precision": precision,
+        "Recall": recall,
+        "F1-Score": f1
+    }
 
-# Select best model
-best_model = max([(log_reg, log_reg_acc), (mlp, mlp_acc), (gbc, gbc_acc), (rf, rf_acc)], key=lambda x: x[1])[0]
+# Convert scores to DataFrame for plotting
+scores_df = pd.DataFrame(scores).T
+
+# Plot bar chart comparison
+plt.figure(figsize=(12, 6))
+scores_df.plot(kind="bar", figsize=(12, 6), colormap="viridis")
+plt.title("Comparison of Model Performance")
+plt.ylabel("Score (%)")
+plt.xticks(rotation=45)
+plt.legend(title="Metrics")
+plt.grid(axis="y", linestyle="--", alpha=0.7)
+plt.show()
+
+# Select best model based on Accuracy
+best_model_name = max(scores, key=lambda x: scores[x]["Accuracy"])
+best_model = models[best_model_name]
 
 # Save best model and vectorizer
 with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\nlp_model.pkl", "wb") as f:
@@ -86,7 +106,7 @@ with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\vectorizer.pkl", "wb") 
 with open(r"C:\Users\manid\Projects\IQAD\ai_model\models\label_encoder.pkl", "wb") as f:
     pickle.dump(label_encoder, f)
 
-print("Training complete! Best model saved.")
+print(f"Training complete! Best model ({best_model_name}) saved.")
 
 # Define quantum algorithm execution function
 def run_algorithm(algorithm, query):
