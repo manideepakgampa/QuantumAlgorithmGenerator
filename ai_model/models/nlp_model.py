@@ -13,7 +13,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 # Download necessary NLTK data
 nltk.download('punkt')
@@ -86,13 +86,18 @@ scores_df = pd.DataFrame(scores).T
 
 # Plot bar chart comparison
 plt.figure(figsize=(12, 6))
-scores_df.plot(kind="bar", figsize=(12, 6), colormap="viridis")
-plt.title("Comparison of Model Performance")
-plt.ylabel("Score (%)")
-plt.xticks(rotation=45)
-plt.legend(title="Metrics")
-plt.grid(axis="y", linestyle="--", alpha=0.7)
-plt.show()
+ax = scores_df.plot(kind="bar", figsize=(12, 6), colormap="viridis", edgecolor='black')
+
+# Annotate bars with values
+for container in ax.containers:
+    ax.bar_label(container, fmt='%.2f', label_type='edge', fontsize=10, padding=3)
+
+# plt.title("Comparison of Model Performance", fontsize=14)
+# plt.ylabel("Score (%)", fontsize=12)
+# plt.xticks(rotation=45, fontsize=10)
+# plt.legend(title="Metrics", fontsize=10)
+# plt.grid(axis="y", linestyle="--", alpha=0.7)
+# plt.show()
 
 # Select best model based on Accuracy
 best_model_name = max(scores, key=lambda x: scores[x]["Accuracy"])
