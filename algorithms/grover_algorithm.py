@@ -82,19 +82,19 @@ def launch_gui():
 
     tk.Label(root, text="Grover's Algorithm", font=("Helvetica", 16, "bold"), fg="white", bg="#1e1e2e").pack(pady=10)
 
-    tk.Label(root, text="Number of Qubits:", bg="#1e1e2e", fg="white").pack()
+    tk.Label(root, text="Number of Qubits: (e.g., 3)", bg="#1e1e2e", fg="white").pack()
     qubit_entry = tk.Entry(root, fg="white", bg="#2a2b3a", justify="center", insertbackground="white")
-    qubit_entry.insert(0, "e.g., 3")
+    qubit_entry.insert(0, "")
     qubit_entry.pack(pady=5)
 
-    tk.Label(root, text="Target State (as integer):", bg="#1e1e2e", fg="white").pack()
+    tk.Label(root, text="Target State (as integer): (e.g., 5)", bg="#1e1e2e", fg="white").pack()
     target_entry = tk.Entry(root, fg="white", bg="#2a2b3a", justify="center", insertbackground="white")
-    target_entry.insert(0, "e.g., 5")
+    target_entry.insert(0, "")
     target_entry.pack(pady=5)
 
-    tk.Label(root, text="Number of Iterations:", bg="#1e1e2e", fg="white").pack()
+    tk.Label(root, text="Number of Iterations: (e.g., 2)", bg="#1e1e2e", fg="white").pack()
     iter_entry = tk.Entry(root, fg="white", bg="#2a2b3a", justify="center", insertbackground="white")
-    iter_entry.insert(0, "e.g., 2")
+    iter_entry.insert(0, "")
     iter_entry.pack(pady=5)
 
     visualize_var = tk.IntVar()
