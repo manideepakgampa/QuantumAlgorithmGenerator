@@ -68,6 +68,31 @@ def predict():
 
         except Exception as e:
             factor_statement = f"Error executing GUI: {str(e)}"
+    elif predicted_algorithm == "Grover's Algorithm":
+        try:
+            grover_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "algorithms", "grover_algorithm.py"))
+            print(f"🚀 Launching Grover GUI at: {grover_path}")
+
+            subprocess.run([sys.executable, grover_path])
+
+            output_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "grover_output.txt"))
+            print(f"🔍 Flask is looking for Grover output at: {output_path}")
+
+            if os.path.exists(output_path):
+                with open(output_path, "r") as f:
+                    content = f.read().strip()
+                    if content:
+                        factor_statement = f"Grover’s Algorithm Executed Successfully.<br> Measured state: |{int(content):03b}>"
+                    else:
+                        factor_statement = "Grover’s Algorithm Executed, but no valid output found."
+                os.remove(output_path)
+            else:
+                factor_statement = "Grover’s Algorithm Executed, but result file not found."
+
+        except Exception as e:
+            factor_statement = f"Error executing Grover GUI: {str(e)}"
+
+    
 
     else:
         factor_statement = "Algorithm currently not supported with GUI."
