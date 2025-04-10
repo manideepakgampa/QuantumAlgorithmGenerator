@@ -51,7 +51,7 @@ def predict():
 
     if predicted_algorithm == "Shor's Algorithm":
         try:
-            subprocess.run(["python", "algorithms/shor_algorithm.py"])
+            subprocess.run(["python", "IQAD/algorithms/shor_algorithm.py"])
 
             output_path = "shor_output.txt"
             if os.path.exists(output_path):
@@ -82,7 +82,7 @@ def predict():
                 with open(output_path, "r") as f:
                     content = f.read().strip()
                     if content:
-                        factor_statement = f"Grover’s Algorithm Executed Successfully.<br> Measured state: |{int(content):03b}>"
+                        factor_statement = f"Grover’s Algorithm Executed Successfully.<br> Measured state: |{int(content):0{len(content)}b}>"
                     else:
                         factor_statement = "Grover’s Algorithm Executed, but no valid output found."
                 os.remove(output_path)
@@ -91,6 +91,29 @@ def predict():
 
         except Exception as e:
             factor_statement = f"Error executing Grover GUI: {str(e)}"
+    elif predicted_algorithm == "Quantum Fourier Transform":
+        try:
+            qft_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "algorithms", "qft.py"))
+            print(f"🚀 Launching QFT GUI at: {qft_path}")
+
+            subprocess.run([sys.executable, qft_path])
+
+            output_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "qft_output.txt"))
+            print(f"🔍 Flask is looking for QFT output at: {output_path}")
+
+            if os.path.exists(output_path):
+                with open(output_path, "r") as f:
+                    content = f.read().strip()
+                    if content:
+                        factor_statement = f"QFT Executed Successfully.<br> Measured state: |{content}>"
+                    else:
+                        factor_statement = "QFT Executed, but no valid output found."
+                os.remove(output_path)
+            else:
+                factor_statement = "QFT Executed, but result file not found."
+
+        except Exception as e:
+            factor_statement = f"Error executing QFT GUI: {str(e)}"
 
     
 
