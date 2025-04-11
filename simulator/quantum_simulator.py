@@ -64,6 +64,9 @@ class QuantumSimulator:
         probabilities = np.abs(self.state) ** 2  # Compute probabilities
         probabilities = probabilities.ravel()  # Convert to 1D array
 
+        # Normalize to avoid floating-point sum issues
+        probabilities /= probabilities.sum()
+
         result = np.random.choice(len(probabilities), p=probabilities)
         return bin(result)[2:].zfill(self.n)  # Convert to binary string
 

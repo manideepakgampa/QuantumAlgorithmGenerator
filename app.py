@@ -114,8 +114,53 @@ def predict():
 
         except Exception as e:
             factor_statement = f"Error executing QFT GUI: {str(e)}"
+    elif predicted_algorithm == "Quantum Teleportation":
+        try:
+            teleport_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "algorithms", "quantum_teleportation.py"))
+            print(f"🚀 Launching Quantum Teleportation GUI at: {teleport_path}")
 
-    
+            subprocess.run([sys.executable, teleport_path])
+
+            output_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "teleportation_output.txt"))
+            print(f"🔍 Flask is looking for teleportation output at: {output_path}")
+
+            if os.path.exists(output_path):
+                with open(output_path, "r") as f:
+                    content = f.read().strip()
+                    if content:
+                        factor_statement = f"Quantum Teleportation Executed Successfully.<br> Bob's qubit state: |{content}>"
+                    else:
+                        factor_statement = "Quantum Teleportation Executed, but no valid output found."
+                os.remove(output_path)
+            else:
+                factor_statement = "Quantum Teleportation Executed, but result file not found."
+
+        except Exception as e:
+            factor_statement = f"Error executing Quantum Teleportation GUI: {str(e)}"
+    elif predicted_algorithm == "Simon's Algorithm":
+        try:
+            simon_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "algorithms", "simon.py"))
+            print(f"🚀 Launching Simon's Algorithm GUI at: {simon_path}")
+
+            subprocess.run([sys.executable, simon_path])
+
+            output_path = os.path.abspath(os.path.join(os.path.dirname(__file__),"simons_output.txt"))
+            print(f"🔍 Flask is looking for Simon output at: {output_path}")
+
+            if os.path.exists(output_path):
+                with open(output_path, "r") as f:
+                    content = f.read().strip()
+                    if content:
+                        factor_statement = f"Simon's Algorithm Executed Successfully.<br> Hidden string s = {content}"
+                    else:
+                        factor_statement = "Simon's Algorithm Executed, but no valid output found."
+                os.remove(output_path)
+            else:
+                factor_statement = "Simon's Algorithm Executed, but result file not found."
+
+        except Exception as e:
+            factor_statement = f"Error executing Simon's Algorithm GUI: {str(e)}"
+
 
     else:
         factor_statement = "Algorithm currently not supported with GUI."
