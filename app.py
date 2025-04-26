@@ -51,7 +51,7 @@ def predict():
 
     if predicted_algorithm == "Shor's Algorithm":
         try:
-            subprocess.run(["python", "IQAD/algorithms/shor_algorithm.py"])
+            subprocess.run(["python", "algorithms/shor_algorithm.py"])
 
             output_path = "shor_output.txt"
             if os.path.exists(output_path):
