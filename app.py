@@ -11,11 +11,11 @@ from ai_model.models.nlp_model import clean_text
 app = Flask(__name__)
 
 # Load saved models
-with open("C:\\Users\\manid\\Projects\\IQAD\\ai_model\\models\\nlp_model.pkl", "rb") as f:
+with open("ai_model\\models\\nlp_model.pkl", "rb") as f:
     model = pickle.load(f)
-with open("C:\\Users\\manid\\Projects\\IQAD\\ai_model\\models\\vectorizer.pkl", "rb") as f:
+with open("ai_model\\models\\vectorizer.pkl", "rb") as f:
     vectorizer = pickle.load(f)
-with open("C:\\Users\\manid\\Projects\\IQAD\\ai_model\\models\\label_encoder.pkl", "rb") as f:
+with open("ai_model\\models\\label_encoder.pkl", "rb") as f:
     label_encoder = pickle.load(f)
 
 def predict_algorithm(query):
